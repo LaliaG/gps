@@ -12,13 +12,29 @@ export default function App() {
     const [country, setCountry] = useState("");
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
+
+
+    
+  useEffect(() => {
+    const watchId = Geolocation.watchPosition(position => {
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+    });
+    return () => Geolocation.clearWatch(watchId);
+  }, []);
+
+  useEffect(() => {
+    if (latitude !== null && longitude !== null) {
+      fetchCityAndCountry();
+    }
+  }, [latitude, longitude]);
   
-    useEffect(() => {
-      Geolocation.getCurrentPosition(position => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      });
-    }, []);
+    // useEffect(() => {
+    //   Geolocation.getCurrentPosition(position => {
+    //     setLatitude(position.coords.latitude);
+    //     setLongitude(position.coords.longitude);
+    //   });
+    // }, []);
   
     const fetchCityAndCountry = async () => {
       try {
@@ -52,3 +68,5 @@ const styles = StyleSheet.create({
 
 
 
+
+  
